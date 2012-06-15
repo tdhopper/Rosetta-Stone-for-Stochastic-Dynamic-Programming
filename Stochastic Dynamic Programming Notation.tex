@@ -1,0 +1,84 @@
+\documentclass{article}
+\usepackage[pdftex]{hyperref}
+\usepackage[margin=.6in, paperwidth=8.5in, paperheight=11in]{geometry}
+\usepackage{amsmath,amssymb, amsfonts, amsthm} 
+\usepackage{pdfsync, tocloft, mathrsfs} 
+\usepackage{natbib, fancyhdr}
+\pagestyle{fancy}
+
+\newcommand{\set}[1]{\left\{#1\right\}} 
+\newcommand{\parens}[1]{\left(#1\right)} 
+\newcommand{\ang}[1]{\left\langle#1\right\rangle} 
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor} 
+\newcommand{\bra}[1]{\left[#1\right]} 
+\newcommand{\bigbra}[1]{\bigl[#1\bigr]} 
+\newcommand{\psbra}[1]{\bra{\bra{#1}}} 
+\newcommand{\abs}[1]{\left|#1\right|} 
+\newcommand{\E}{\mathbb{E}} 
+\newcommand{\R}{\mathbb{R}} 
+\newcommand{\Z}{\mathbb{Z}} 
+\newcommand{\g}{\,|\,} 
+\newcommand{\norm}[1]{\left\|#1\right\|} 
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\fancyhead{}
+\fancyfoot[C]{Tim Hopper -- \href{mailto:tdhopper@gmail.com}{tdhopper@gmail.com} -- \href{http://www.stiglerdiet.com}{StiglerDiet.com}}
+
+
+\begin{document}
+	
+\textbf{Notation for Stochastic Dynamic Programming} (Markov Decision Processes, Approximate Dynamic Programming, Reinforcement Learning)	
+	
+\begin{center}
+	\begin{tabular}{|c|c|c|c|c|} \hline
+	 					& \citeauthor{bertsekas2007dynamic}& \citeauthor{sutton1998reinforcement}& \citeauthor{puterman1994markov} & \citeauthor{powell2011approximate}\\ \hline
+	Stages				& $k$ 					&	$t$						& $t$						& $t$							\\
+	First Stage			& $N$ 					&	$1$						& $1$						& 1								\\
+	Final Stage			& $0$ 					&	$T$						& $N$						& $T$							\\
+	State Space			& 			 			&							& $S$						& $\mathcal{S}$					\\
+	State				& $i$, $i_{k}$ 			&	$s$						& $s$						& $s$, $S_{t}$ 					\\
+	Action Space 		& $U(i)$ 				&							& $A=\cup_{s\in S}A_{s}$	& $\mathcal{A}$					\\
+	Action 				& 					 	&	$a$ 					& $a$						& $a$							\\
+	Policy 				& $\mu_{k}(i)$, $\pi$ 	&	$\pi(s,a)$, $\pi$ 		& $\pi$, $d_{t}^{MD}(s)$	& $\pi$							\\
+	Transitions 		& $p_{ij}(\mu_{k}(i))$ 	& $\mathcal{P}_{ss'}^{a}$ 	& $p_{t}(\cdot\g s,a)$		& $\mathbb{P}(s'\g S_{t},a_{t})$\\
+	Cost 				& $g(i,u,j)$			& $\mathcal{R}_{ss'}^{a}$ 	& $r_t(s,a)$				& $C_{t}(S_{t},a_{t})$ 			\\
+	Terminal Cost 		& $G(i_{N})$ 			&$r_{T}$					& $r_{N}(s)$				& $V_{T}(S_{T})$				\\
+	Discount 			& $\alpha$ 				&$\gamma$					& $\lambda$					& $\gamma$						\\
+	Q-Value (Policy) 	& $J_{k}^{\pi}(i)$ 		& $\mathcal{Q}^{\pi}(s,a)$ 	&							& 								\\
+	Q-Value (Optimal) 	& 						& 						 	&							& $\mathcal{Q}(S^{n},a)$		\\
+	Value (Policy) 		& $J_{k}^{\pi}(i)$		& $V^{\pi}(s)$ 				& $u_{t}^{\pi}$				& $V_{t}^{\pi}(S_{t})$			\\
+	Value (Optimal) 	& $J_{k}^{*}(i)$		& $V^{*}(s)$				& $u_{t}^{*}$				& $V_{t}(S_{t})$				\\
+	Bellman Operator 	& $T$ 					& 							& $\mathscr{L}$, $L$		& $\mathcal{M}$ 				\\ \hline
+	\end{tabular}
+\end{center}
+
+\subsubsection*{Optimal Value Function} % (fold)
+\label{ssub:optimal_value_function}
+\begin{itemize}
+	\item 
+		\citet{bertsekas2007dynamic}
+		\[
+			J_{k}^{*}=\min_{u\in U(i)}\sum_{j=1}^{n}p_{ij}(u)\parens{g(i,u,j)+\alpha J^{*}_{k-1}(j)}
+		\]
+	\item 
+	\citet{sutton1998reinforcement}
+		\[
+			V^{*}(s)=\max_{a}\mathcal{P}^{a}_{ss'}\bra{\mathcal{R}^{a}_{ss'}+\gamma V^{*}(s')}
+		\]
+	\item 
+	\citet{puterman1994markov}
+		\[
+			u_{t}^{*}(s_{t})=\max_{a\in A_{s_{t}}}\set{r_{t}(s_{t},a)+\sum_{j\in S}p_{t}(j\g s_{t},a)u_{t+1}^{*}(j)}
+		\]
+	\item 
+	\citet{powell2011approximate}
+		\[
+			V_{t}(S_{t})=\max_{a_{t}}\set{C_{t}(S_{t},a_{t})+\gamma\sum_{s'\in \mathcal{S}}\mathbb{P}(s'\g S_{t},a_{t})V_{t+1}(s')}
+		\]
+\end{itemize}
+
+
+\bibliographystyle{plainnat}
+\bibliography{bib2}  
+
+\end{document}
